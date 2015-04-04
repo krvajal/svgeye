@@ -102,6 +102,11 @@ MainFrame::MainFrame(wxWindow *parent, const wxString& title, const wxPoint& pos
 		m_svgCtrl->Load(wxTheApp->argv[1]);
 	}
     Center();
+	DoCreateStatusBar();
+
+	
+	SetMinSize(GetSize());
+
     Show(true);
 }
 
@@ -109,8 +114,12 @@ void MainFrame::OnOpen(wxCommandEvent& event)
 {
   wxString filename = wxFileSelector(_T("Choose a file to open"),
     _T(""), _T(""), _T(""), _T("SVG files (*.svg)|*.svg|All files (*.*)|*.*"));
-  if (!filename.empty())
-    m_svgCtrl->Load(filename);
+  if (!filename.empty()){
+	  m_svgCtrl->Load(filename);
+	  if (auto statusBar = GetStatusBar()){
+		  statusBar->SetStatusText(filename);
+	  }
+  }
 }
 
 void MainFrame::OnSave(wxCommandEvent& event)
@@ -166,4 +175,39 @@ void MySVGCanvas::OnMouseLeftUp (wxMouseEvent & event)
 	    }
 	    wxMessageBox(message, _T("Hit Test (objects bounding box)"));
   	}
+}
+
+
+void MainFrame::DoCreateStatusBar(){
+
+	wxStatusBar *statbarOld = GetStatusBar();
+	if (statbarOld)
+	{
+		SetStatusBar(NULL);
+		delete statbarOld;
+	}
+
+	wxStatusBar *statbarNew = NULL;
+	/*switch (kind)
+	{
+	case StatBar_Default:*/
+	statbarNew = new wxStatusBar(this, wxID_ANY, wxSTB_SIZEGRIP | wxSTB_ELLIPSIZE_START , "wxStatusBar");
+	const int fieldsWidth[] = { -2, 150 };
+
+	statbarNew->SetFieldsCount(2, fieldsWidth);
+
+			//break;
+
+		//case StatBar_Custom:
+		//	statbarNew = new MyStatusBar(this, style);
+		//	break;
+
+		//default:
+		//	wxFAIL_MSG(wxT("unknown status bar kind"));
+		//}
+
+		SetStatusBar(statbarNew);
+		//ApplyPaneStyle();
+		PositionStatusBar();
+
 }

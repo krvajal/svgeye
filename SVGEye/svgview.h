@@ -39,6 +39,10 @@ class MainFrame: public wxFrame
       const wxSize& size, long style = wxDEFAULT_FRAME_STYLE);
 
   protected:
+
+
+
+
     MySVGCanvas* m_svgCtrl;
     void OnOpen(wxCommandEvent& event);
     void OnSave(wxCommandEvent& event);
@@ -46,6 +50,8 @@ class MainFrame: public wxFrame
     void Fit(wxCommandEvent& event);
     void Hittest(wxCommandEvent& event);
 
+	//create status bar
+	void DoCreateStatusBar();
     DECLARE_EVENT_TABLE()
 };
 
