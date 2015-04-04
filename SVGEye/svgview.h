@@ -47,11 +47,27 @@ class MainFrame: public wxFrame
     void OnOpen(wxCommandEvent& event);
     void OnSave(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
+	void OnNext(wxCommandEvent& event);
+	void OnPrev(wxCommandEvent& event);
     void Fit(wxCommandEvent& event);
     void Hittest(wxCommandEvent& event);
 
+
+	wxString m_workingDir;
+	bool m_isInDir;
+
+
 	//create status bar
 	void DoCreateStatusBar();
+
+private:
+	void LoadDir(const wxString& dirname);
+	void LoadDirWithFile(const wxString& filename);
+	void ShowFile(int index);
+	void ShowNext();
+	void ShowPrev();
+	int m_current_file;
+	wxArrayString m_files;
     DECLARE_EVENT_TABLE()
 };
 
