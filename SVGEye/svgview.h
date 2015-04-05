@@ -13,12 +13,9 @@
 
 #include <wx/wx.h>
 #include <wxSVG/svgctrl.h>
+#include "SVGViewApp.h"
 
-class SVGViewApp: public wxApp
-{
-  public:
-    bool OnInit();
-};
+
 
 class MySVGCanvas: public wxSVGCtrl
 {
@@ -51,7 +48,7 @@ class MainFrame: public wxFrame
 	void OnPrev(wxCommandEvent& event);
     void Fit(wxCommandEvent& event);
     void Hittest(wxCommandEvent& event);
-
+	void OnKeyDown(wxKeyEvent & event);
 
 	wxString m_workingDir;
 	bool m_isInDir;

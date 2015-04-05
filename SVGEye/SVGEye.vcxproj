@@ -12,9 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="svgview.cpp" />
+    <ClCompile Include="SVGViewApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="svgview.h" />
+    <ClInclude Include="SVGViewApp.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ECC057E4-3B8E-41B5-921A-1AD53E34C40B}</ProjectGuid>
