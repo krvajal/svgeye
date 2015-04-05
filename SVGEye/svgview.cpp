@@ -31,15 +31,17 @@ enum
 {
 	wxID_FIT = 1,
 	wxID_HITTEST,
+
 	MENU_NAV_PREV_ID,
-	MENU_NAV_NEXT_ID
+	MENU_NAV_NEXT_ID,
+	MENU_OPEN_DIR_ID
 };
 
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
-EVT_MENU(wxID_OPEN, MainFrame::OnOpen)
+EVT_MENU(wxID_OPEN, MainFrame::OnOpenFile)
+EVT_MENU(MENU_OPEN_DIR_ID, MainFrame::OnOpenDir)
 EVT_MENU(wxID_SAVE, MainFrame::OnSave)
-EVT_MENU(wxID_FIT, MainFrame::Fit)
-EVT_MENU(wxID_HITTEST, MainFrame::Hittest)
+
 EVT_MENU(wxID_EXIT, MainFrame::OnExit)
 EVT_MENU(MENU_NAV_PREV_ID, MainFrame::OnPrev)
 EVT_MENU(MENU_NAV_NEXT_ID, MainFrame::OnNext)
@@ -58,14 +60,12 @@ wxFrame(parent, wxID_ANY, title, pos, size, style) {
 
 	// Make a menubar
 	wxMenu *fileMenu = new wxMenu;
-	fileMenu->Append(wxID_OPEN, _T("&Open...\tCtrl-O"));
+	fileMenu->Append(wxID_OPEN, _T("&Open file ...\tCtrl-O"));
+	fileMenu->Append(MENU_OPEN_DIR_ID, _T("Open dir...\tCtrl+Alt-O"));
 	fileMenu->Append(wxID_SAVE, _T("&Save as...\tCtrl-S"));
 	fileMenu->AppendSeparator();
 	fileMenu->Append(wxID_EXIT, _T("&Exit\tAlt-X"));
-	fileMenu->AppendSeparator();
-	fileMenu->AppendCheckItem(wxID_FIT, _T("&FitToFrame"))->Check();
-	fileMenu->AppendCheckItem(wxID_HITTEST, _T("&Hit-Test"));
-
+	
 	wxMenu *navMenu = new wxMenu;
 	navMenu->Append(MENU_NAV_PREV_ID, _T("Previus"));
 	navMenu->Append(MENU_NAV_NEXT_ID, _T("Next"));
@@ -87,6 +87,8 @@ wxFrame(parent, wxID_ANY, title, pos, size, style) {
 #endif
 
 	m_svgCtrl = new MySVGCanvas(this);
+
+	m_svgCtrl->SetFitToFrame(true);
 	if (wxTheApp->argc > 1){
 		auto commandLine = wxTheApp->argv[1];
 		if (wxDirExists(commandLine)){
@@ -109,7 +111,7 @@ wxFrame(parent, wxID_ANY, title, pos, size, style) {
 	Show(true);
 }
 
-void MainFrame::OnOpen(wxCommandEvent& event)
+void MainFrame::OnOpenFile(wxCommandEvent& event)
 {
 	wxString filename = wxFileSelector(_T("Choose a file to open"),
 		_T(""), _T(""), _T(""), _T("SVG files (*.svg)|*.svg|All files (*.*)|*.*"));
@@ -117,12 +119,20 @@ void MainFrame::OnOpen(wxCommandEvent& event)
 
 		//TODO: Check error here
 		LoadDirWithFile(filename);
-		if (auto statusBar = GetStatusBar()){
-			statusBar->SetStatusText(filename);
-		}
+		
 	}
 }
 
+
+void MainFrame::OnOpenDir(wxCommandEvent& event)
+{
+	const wxString& dir = wxDirSelector("Choose a folder");
+	if (!dir.empty())
+	{
+		LoadDir(dir);
+	}
+	
+}
 void MainFrame::OnSave(wxCommandEvent& event)
 {
 	wxString filename = wxFileSelector(_T("Choose a file to save"),
@@ -131,16 +141,11 @@ void MainFrame::OnSave(wxCommandEvent& event)
 		m_svgCtrl->GetSVG()->Save(filename);
 }
 
-void MainFrame::Hittest(wxCommandEvent& event)
-{
-	m_svgCtrl->SetShowHitPopup(event.IsChecked());
-}
+//void MainFrame::Hittest(wxCommandEvent& event)
+//{
+//	m_svgCtrl->SetShowHitPopup(event.IsChecked());
+//}
 
-void MainFrame::Fit(wxCommandEvent& event)
-{
-	m_svgCtrl->SetFitToFrame(event.IsChecked());
-	m_svgCtrl->Update();
-}
 
 void MainFrame::OnExit(wxCommandEvent& WXUNUSED(event))
 {
@@ -222,9 +227,14 @@ void MainFrame::LoadDirWithFile(const wxString& filename){
 
 
 	m_isInDir = true;
-	//get firs svg file in the dir	
-	int numFiles = wxDir::GetAllFiles(m_workingDir, &m_files, "*.svg", wxDirFlags::wxDIR_FILES);
+	auto new_files = wxArrayString();
+		//get firs svg file in the dir	
+	int numFiles = wxDir::GetAllFiles(m_workingDir, &new_files, "*.svg", wxDirFlags::wxDIR_FILES);
+
 	if (numFiles){
+		//discard old files and use new ones
+		m_files = new_files;
+
 		//find file index
 		auto pos = std::find_if(m_files.begin(), m_files.end(), [&filename](const wxString & file){return file == filename; });
 		assert(pos != m_files.end()); //the file mus be there
@@ -235,9 +245,13 @@ void MainFrame::LoadDir(const wxString& dirname){
 
 	m_workingDir = dirname;
 	m_isInDir = true;
+	
+	auto new_files = wxArrayString();
 	//get firs svg file in the dir	
-	int numFiles = wxDir::GetAllFiles(dirname, &m_files, "*.svg", wxDirFlags::wxDIR_FILES);
+	int numFiles = wxDir::GetAllFiles(m_workingDir, &new_files, "*.svg", wxDirFlags::wxDIR_FILES);
+
 	if (numFiles){
+		m_files = new_files;
 		//load file
 		ShowFile(0);
 	}

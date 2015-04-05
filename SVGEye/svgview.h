@@ -41,13 +41,14 @@ class MainFrame: public wxFrame
 
 
     MySVGCanvas* m_svgCtrl;
-    void OnOpen(wxCommandEvent& event);
+    void OnOpenFile(wxCommandEvent& event);
+	void OnOpenDir(wxCommandEvent& event);
     void OnSave(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
 	void OnNext(wxCommandEvent& event);
 	void OnPrev(wxCommandEvent& event);
-    void Fit(wxCommandEvent& event);
-    void Hittest(wxCommandEvent& event);
+    //void Fit(wxCommandEvent& event);
+    //void Hittest(wxCommandEvent& event);
 	void OnKeyDown(wxKeyEvent & event);
 
 	wxString m_workingDir;
