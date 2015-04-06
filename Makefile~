@@ -1,0 +1,58 @@
+CXX = g++
+
+
+CXXFLAGS = `wx-config --cxxflags`  -g -O2 -I/usr/include/cairo -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12   -DUSE_RENDER_CAIRO -pthread -I/usr/include/pango-1.0 -I/usr/include/cairo -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12    -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -D__WXGTK__ -pthread -std=c++11
+
+LIBS = -lexpat  -lcairo   -lpangocairo-1.0 -lpango-1.0 -lcairo -lgobject-2.0 -lglib-2.0   `wx-config --libs`  -L/usr/X11R6/lib64  
+
+
+SRC_DIR = ./src
+
+WXSVG_SRC = SVGDocument.cpp svgctrl.cpp imagsvg.cpp \
+	SVGAnimatedType.cpp SVGAnimationElement.cpp \
+	SVGAnimateTransformElement.cpp SVGCircleElement.cpp \
+	SVGEllipseElement.cpp SVGFEGaussianBlurElement.cpp \
+	SVGFilterElement.cpp SVGImageElement.cpp SVGLineElement.cpp \
+	SVGLocatable.cpp SVGMarkerElement.cpp SVGPathElement.cpp \
+	SVGPolylineElement.cpp SVGPolygonElement.cpp \
+	SVGRectElement.cpp SVGRadialGradientElement.cpp \
+	SVGSVGElement.cpp SVGTextContentElement.cpp SVGTextElement.cpp \
+	SVGUseElement.cpp SVGVideoElement.cpp SVGAngle.cpp \
+	SVGColor.cpp GetSVGDocument.cpp SVGLength.cpp SVGMatrix.cpp \
+	SVGPaint.cpp SVGPoint.cpp SVGPreserveAspectRatio.cpp \
+	SVGRect.cpp SVGTests.cpp SVGTransform.cpp SVGFitToViewBox.cpp \
+	SVGStylable.cpp SVGTransformable.cpp \
+	SVGElementInstanceList.cpp SVGLengthList.cpp SVGNumberList.cpp \
+	SVGPathSegList.cpp SVGPointList.cpp SVGStringList.cpp \
+	SVGTransformList.cpp Elements_CopyConstructors.cpp \
+	Elements_HasAttribute.cpp Elements_GetAttribute.cpp \
+	Elements_GetAttributes.cpp Elements_SetAttribute.cpp \
+	CSSValue.cpp CSSStyleDeclaration.cpp SVGCanvas.cpp \
+	SVGCanvasItem.cpp NodeList.cpp mediadec_ffmpeg.cpp
+
+WXSVGOBJECTS = SVGDocument.lo svgctrl.lo imagsvg.lo \
+	SVGAnimatedType.lo SVGAnimationElement.lo \
+	SVGAnimateTransformElement.lo SVGCircleElement.lo \
+	SVGEllipseElement.lo SVGFEGaussianBlurElement.lo \
+	SVGFilterElement.lo SVGImageElement.lo SVGLineElement.lo \
+	SVGLocatable.lo SVGMarkerElement.lo SVGPathElement.lo \
+	SVGPolylineElement.lo SVGPolygonElement.lo SVGRectElement.lo \
+	SVGRadialGradientElement.lo SVGSVGElement.lo \
+	SVGTextContentElement.lo SVGTextElement.lo SVGUseElement.lo \
+	SVGVideoElement.lo SVGAngle.lo SVGColor.lo GetSVGDocument.lo \
+	SVGLength.lo SVGMatrix.lo SVGPaint.lo SVGPoint.lo \
+	SVGPreserveAspectRatio.lo SVGRect.lo SVGTests.lo \
+	SVGTransform.lo SVGFitToViewBox.lo SVGStylable.lo \
+	SVGTransformable.lo SVGElementInstanceList.lo SVGLengthList.lo \
+	SVGNumberList.lo SVGPathSegList.lo SVGPointList.lo \
+	SVGStringList.lo SVGTransformList.lo \
+	Elements_CopyConstructors.lo Elements_HasAttribute.lo \
+	Elements_GetAttribute.lo Elements_GetAttributes.lo \
+	Elements_SetAttribute.lo CSSValue.lo CSSStyleDeclaration.lo \
+	SVGCanvas.lo SVGCanvasItem.lo NodeList.lo 
+
+
+OBJECTS = objs/SVGViewApp.o objs/svgview.o $(WXSVGOBJECTS)
+SOURCES = svgeye/SGVViewApp.cpp objs/svgview.cpp
+
+ 
