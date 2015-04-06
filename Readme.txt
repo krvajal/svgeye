@@ -1,1 +1,2 @@
-Library ffmpeg: Site http://ffmpeg.zeranoe.com/builds/
+SVGEye
+Multiplataform svg viewer based on wxWidgets
